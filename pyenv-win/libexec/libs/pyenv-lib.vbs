@@ -297,7 +297,14 @@ Sub WriteWinScript(baseName)
         With objfs.CreateTextFile(filespec)
             .WriteLine("@echo off")
             .WriteLine("chcp 1250 > NUL")
-            .WriteLine("call pyenv exec %~n0 %*")
+            .WriteLine("call pyenv exec ""%~n0"" %*")
+            .Close
+        End With
+    End If
+    filespec = strDirShims &"\"& baseName &".ps1"
+    If Not objfs.FileExists(filespec) Then
+        With objfs.CreateTextFile(filespec)
+            .WriteLine("pyenv exec ""$($MyInvocation.MyCommand.Name.Substring(0, $MyInvocation.MyCommand.Name.length - 4))"" @Args")
             .Close
         End With
     End If
